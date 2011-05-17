@@ -1,5 +1,5 @@
 <!--
-Drpl.it Url Shortner Chrom Extension
+Drpl.it Url Shortner Chrome Extension
 Developed By Arjun (naughty_david)
 for Drpl.it
 www.drpl.it
@@ -7,28 +7,41 @@ www.athousandnodes.com
 -->
 <style>
   body{
-    width: 150px;
+    width:250px;
+    font-family:arial, sans-serif;
+    color:#3C9FDD;
+    padding:5px;
+    margin:0;
   }
-  p#message{
-    color: #238DCF;
-    margin: 4px;
+  
+  #msg{
+    font-size:12px;
+    text-align:center;
+    margin:0 5px;
   }
-  .title{
-    background: #3C9FDD;
-    color: white;
-    -moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    border-radius: 20px;
-    text-decoration: none;
-    padding: 2px 10px;
+  
+  .loading{
+    background:url(loader.gif) no-repeat left center transparent;
+    padding:5px 5px 5px 20px;
   }
+  
+  .success{
+    color:#8AAD5F;
+  }
+  
+  .failure{
+    color:#F00003;
+  }
+  
   #url{
-    width: 147px;
-    display: none;
-    margin: 6px 0;
+    width: 150px;
+    margin: 5px 50px;
     border: solid 1px #EEE;
     color: #3C9FDD;
+    padding:2px;
+    text-align:center;
   }
+  
 </style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <script>
@@ -60,24 +73,24 @@ www.athousandnodes.com
         dataType: 'json',
         success: function(data){
           if(data.success){
-            $('#message').hide();
-            $('#url').val(data.shortUrl).show().focus().select();
+            $('#msg').removeClass('loading').html('Your URL got Drupal!');
+            var input = $('<input name="url" id="url" />').val(data.shortUrl)
+            $('#msg').addClass('success').after(input);
+            input.focus().select();
           }
           else{
-            $('#message').html("Error: " + data.error);
+            $('#msg').addClass('failure').removeClass('loading').html("Error: " + data.error);
           }
         },
         error: function(error){
-          $('#message').html("Error: There was some error");
+          $('#msg').addClass('failure').removeClass('loading').html("Error: There was some error");
         }
       });
     }
     else{
-      $('#message').html("Error: Url is not Valid");
+      $('#msg').addClass('failure').removeClass('loading').html("Error: Url is not Valid");
     }
   }
   
 </script>
-<a class="title" href="http://drpl.it">Drpl.IT</a>
-<p id="message">Shortening..</p>
-<input name="url" id="url" style="display:none;" />
+<p id="msg" class="loading">Adding some Drupal flavor to the url....</p>
