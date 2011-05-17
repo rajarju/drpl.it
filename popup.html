@@ -1,0 +1,83 @@
+<!--
+Drpl.it Url Shortner Chrom Extension
+Developed By Arjun (naughty_david)
+for Drpl.it
+www.drpl.it
+www.athousandnodes.com
+-->
+<style>
+  body{
+    width: 150px;
+  }
+  p#message{
+    color: #238DCF;
+    margin: 4px;
+  }
+  .title{
+    background: #3C9FDD;
+    color: white;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    padding: 2px 10px;
+  }
+  #url{
+    width: 147px;
+    display: none;
+    margin: 6px 0;
+    border: solid 1px #EEE;
+    color: #3C9FDD;
+  }
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script>
+  var url;
+  window.addEventListener("load", windowLoaded, false);
+
+  function windowLoaded() {
+    chrome.tabs.getSelected(null, function(tab) {
+      url = tab.url;
+      DrplShorten(url);
+    });
+  }
+
+  function validateUrl(testUrl){
+    if(/^([a-z]([a-z]|\d|\+|-|\.)*):(\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?((\[(|(v[\da-f]{1,}\.(([a-z]|\d|-|\.|_|~)|[!\$&'\(\)\*\+,;=]|:)+))\])|((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=])*)(:\d*)?)(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*|(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)){0})(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(testUrl)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function DrplShorten(longUrl){
+    if(validateUrl(longUrl)){
+      $.ajax({
+        url: 'http://drpl.it/api/shorten',
+        data: {
+          longUrl: longUrl
+        },
+        dataType: 'json',
+        success: function(data){
+          if(data.success){
+            $('#message').hide();
+            $('#url').val(data.shortUrl).show().focus().select();
+          }
+          else{
+            $('#message').html("Error: " + data.error);
+          }
+        },
+        error: function(error){
+          $('#message').html("Error: There was some error");
+        }
+      });
+    }
+    else{
+      $('#message').html("Error: Url is not Valid");
+    }
+  }
+  
+</script>
+<a class="title" href="http://drpl.it">Drpl.IT</a>
+<p id="message">Shortening..</p>
+<input name="url" id="url" style="display:none;" />
