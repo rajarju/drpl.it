@@ -1,7 +1,7 @@
 {
-  "name": "Drpl.IT",
+  "name": "drpl.it",
   "version": "1.0",
-  "description": "Extension for Drpl.IT URL Shortner.",
+  "description": "Extension for drpl.it URL Shortner.",
   "homepage_url" : "http://drpl.it",
   "icons": {
     "16": "icon_16.png",
